@@ -1,6 +1,5 @@
-#!usr/bin/perl 
+#!usr/bin/perl -w 
 use strict;
-#trqbwa da wklucha warningite!!!
 
 my @goats;
 my @transported;
