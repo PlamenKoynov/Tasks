@@ -17,27 +17,26 @@ $server = IO::Socket::INET->new(
 	Reuse		=> 1
 ) || die "Can't establish server: $!\n" unless $server;
 
-print "The server is ready and is waiting clients!\n";
+print "The server is ready and is waiting clients!\nListening...\n";
 
-while(1)
-{
-	my $client = $server->accept();
-	
+while(my $client = $server->accept())
+{	
 	#informaciq za nowiq client:
 	my $cl_addr = $client->peerhost();
-	my $cl_port = $client->peerport();
+	my $cl_port = $client->peerport(); 
 	print "Connected: $cl_addr:$cl_port\n";
+    
+    while(1)
+    {
+		#chetene na informaciq
+		my $data;
+		$client->recv($data, 1024);
+		print "Recieved data: $data";
 
-	#chetene na informaciq
-	my $data;
-	$client->recv($data, 1024);
-	print "Recieved data: $data\n";
-
-	#izprashtane na informaciq
-	$client->send("Everything is fine!\n");
-
-	shutdown($client, 1);
+		#izprashtane na informaciq
+		$client->send("Everything is fine!\n");
+	}	
+	#shutdown($client, 1);
 }
 #zatvarqne na socket - a
 $server->close();
-
