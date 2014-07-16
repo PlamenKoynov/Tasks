@@ -1,0 +1,13 @@
+CREATE FUNCTION findAverage()
+RETURNS REAL AS $$
+DECLARE 
+sum REAL := 0; i REAL := 0; marks TEXT := ''; counter INT := 0; result REAL := 0;
+BEGIN
+marks := 'SELECT grade FROM students';
+FOR i IN EXECUTE (marks) LOOP
+sum := sum + i; counter := counter + 1;
+END LOOP;
+RETURN sum/counter;
+END;
+$$
+LANGUAGE 'plpgsql';
