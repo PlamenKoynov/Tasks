@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w
 use strict;
 
-my $exit = 0;
 my $size = 1;
 my $counter = 0;
 my $n;
 my $k = 10;
-my $num = 1;
 
 do
 {
@@ -16,29 +14,37 @@ do
 }
 while($n <= 0 || $n > 3200000);
 
-while($exit == 0)
+my $temp = 1;
+for($temp = 1; $temp <= $n; $temp += 1)
 {
-	if($counter >= $n)
+	if($temp * $temp >= $k)
 	{
-		$exit = 1;
-		$num -= 1
-	}
-	else
-	{
-		if($num * $num > $k)
-		{
 			$k *= 10;
 			$size += 1;
-		}
-		$counter += $size;
-		$num += 1;
+	}
+	$counter += $size;
+	if($counter >= $n)
+	{
+		last;
 	}
 }
-$num *= $num;
+$temp *= $temp;
 while($counter > $n)
 {
-	$num = int ($num / 10);
+	$temp = int ($temp / 10);
 	$counter -= 1;
 }
-$num = int ($num % 10);
-print("The digit on position $n is $num!\n");
+$temp = int ($temp % 10);
+print("The digit on position $n is $temp!\n");
+
+
+
+
+
+
+
+
+
+
+
+
