@@ -31,13 +31,13 @@ sub showInfo()
 	print "Grade: $self->{'grade'}\n";
 }
 
-sub showWholeName()
+sub showWholeName
 {
 	my($self) = @_;
 	return $self->{'first'} . " " . $self->{'second'} . " " . $self->{'third'};
 }
 
-sub changeFirstName()
+sub changeFirstName
 {
 	my($self, $name) = @_;
 	if(defined $name and $name ne "")
@@ -47,7 +47,7 @@ sub changeFirstName()
 	return $self->{first};
 }
 
-sub changeSecondName()
+sub changeSecondName
 {
 	my($self, $name) = @_;
 	if(defined $name and $name ne "")
@@ -57,7 +57,7 @@ sub changeSecondName()
 	return $self->{second};
 }
 
-sub changeFamilyName()
+sub changeFamilyName
 {
 	my($self, $name) = @_;
 	if(defined $name and $name ne "")
@@ -67,7 +67,7 @@ sub changeFamilyName()
 	return $self->{third};
 }
 
-sub changeFacultyNumber()
+sub changeFacultyNumber
 {
 	my($self, $num) = @_;
 	if(defined $num and length($num) == 9)
@@ -77,7 +77,7 @@ sub changeFacultyNumber()
 	return $self->{number};
 }
 
-sub changeYear()
+sub changeYear
 {
 	my($self, $currYear) = @_;
 	if(defined $currYear and $currYear > 0 and $currYear <= 4)
@@ -87,7 +87,7 @@ sub changeYear()
 	return $self->{year};
 }
 
-sub changeGrade()
+sub changeGrade
 {
 	my($self, $gr) = @_;
 	if(defined $gr and $gr >= 2 and $gr <= 6)
@@ -96,7 +96,7 @@ sub changeGrade()
 	}
 	return $self->{grade};
 }
-sub oldDogs()
+sub oldDogs
 {
 	my ($self) = @_;
 	switch($self->{year})
