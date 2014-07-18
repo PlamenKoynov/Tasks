@@ -69,7 +69,7 @@ for($i = 0; $i <= $countStrawberries - 1; $i++)
 		chomp($cols);
 	}
 	while ($cols < 0 || $cols > $y);
-	$strawberries[$rows][$cols] = 1;
+	$strawberries[$x - $rows + 1][$cols] = 1;
 }
 
 for($d = 1; $d <= $days; $d++)
@@ -115,12 +115,4 @@ for($i = 1; $i <= $x; $i++)
 }
 
 print "Good strawberries: $counter!\n";
-
-
-
-
-
-
-
-
 
