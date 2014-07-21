@@ -1,4 +1,4 @@
-#!usr/bin/perl -w
+#!usr/bin/perl
 use strict;
 
 my @strawberries = ();
@@ -19,7 +19,7 @@ do
 	$x = <STDIN>;
 	chomp($x);
 }
-while($x <= 0 || $x > 1000);
+while($x <= 0 || $x > 1000 || $x =~ /\D/);
 
 do
 {
@@ -27,21 +27,21 @@ do
 	$y = <STDIN>;
 	chomp($y);
 }
-while($y <= 0 || $y > 1000);
+while($y <= 0 || $y > 1000 || $y =~ /\D/);
 do
 {
 	print "Days: ";
 	$days = <STDIN>;
 	chomp($days);
 }
-while($days < 0 || $days > 100);
+while($days < 0 || $days > 100 || $days =~ /\D/);
 do
 {
 	print "Bad strawberries: ";
 	$countStrawberries = <STDIN>;
 	chomp($countStrawberries);
 }
-while($countStrawberries > $x * $y || $countStrawberries < 0);
+while($countStrawberries > $x * $y || $countStrawberries < 0 || $countStrawberries =~ /\D/);
 
 for($i = 1; $i <= $x; $i++)
 {
@@ -50,7 +50,6 @@ for($i = 1; $i <= $x; $i++)
 		$strawberries[$i][$j] = 0;
 	}
 }
-
 
 
 for($i = 0; $i <= $countStrawberries - 1; $i++)
@@ -115,4 +114,3 @@ for($i = 1; $i <= $x; $i++)
 }
 
 print "Good strawberries: $counter!\n";
-

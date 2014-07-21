@@ -53,15 +53,10 @@ do
 		}
 		case 5
 		{
-			print "-------------Where students live-------------\n";
-			showDorm();
-		}
-		case 6
-		{
 			print "-------------Read data from file-------------\n";
 			readFromFile();	
 		}
-		case 7
+		case 6
 		{
 			print "-------------Exit!-------------\n";
 			print "Bye bye and have a good day!\n";
@@ -69,9 +64,10 @@ do
 		}
 	}
 }
-while($choice != 7);
+while($choice != 6);
 
 #krai
+$sth->finish;
 $dbh->disconnect();
 
 sub menu
@@ -84,9 +80,8 @@ sub menu
 		print "|2.Add information about students   |\n";
 		print "|3.Remove information about students|\n";
 		print "|4.Update information about students|\n";
-		print "|5.Show me where students live      |\n";
-		print "|6.Add students from file           |\n";
-		print "|7.Exit                             |\n";
+		print "|5.Add students from file           |\n";
+		print "|6.Exit                             |\n";
 		print "+===================================+\n";
 		print "Choose an option: ";
 		$val = <STDIN>;
@@ -158,7 +153,7 @@ sub addStudents
 		$block = <STDIN>;
 		chomp($block);
 
-		$dbh->do("INSERT INTO students (firstname, secondname, thirdname, facultynumber, grade, block);	VALUES (\'$first\', \'$second\', \'$third\', \'$num\', \'$mark\', \'$block\')");
+		$dbh->do("INSERT INTO students (firstname, secondname, thirdname, facultynumber, grade, block) VALUES (\'$first\', \'$second\', \'$third\', \'$num\', \'$mark\', \'$block\')");
 
 		if(checkAns() eq 'n')
 		{
@@ -225,8 +220,9 @@ sub updateInfo
 sub readFromFile
 {
 	my @info;
+	my $notSaved = 0;
 	my $filename;
-	print "Please entr the name of the file you want to open for reading!\n";
+	print "Please enter the name of the file you want to open for reading!\n";
 	$filename = <STDIN>;
 	chomp($filename);
 
@@ -234,10 +230,26 @@ sub readFromFile
 	while(<FILE>)
 	{
 		@info = split / /, $_;
-		$dbh->do("INSERT INTO students (firstname, secondname, thirdname, facultynumber, grade, block);	VALUES (\'$info[0]\', \'$info[1]\', \'$info[2]\', \'$info[3]\', \'$info[4]\', \'$info[5]\', \'$info[6]\')");
+		if(checkNum($info[3]) != 0)
+		{
+			$notSaved++;
+		}
+		else
+		{
+			$dbh->do("INSERT INTO students (firstname, secondname, thirdname, facultynumber, grade, block) VALUES (?, ?, ?, ?, ?, ?)" , undef, $info[0], $info[1], $info[2], $info[3], $info[4], $info[5]);
+		}
 	}
 	close FILE;
 	print "The file was read!\n";
+	if($notSaved != 0)
+	{
+		print "There were $notSaved students with existing faculty number! They were not recorded!\n";
+		$notSaved = 0; 
+	}
+	else
+	{
+		print "Everything is OK!\n";
+	}
 }
 
 sub checkAns
@@ -251,4 +263,12 @@ sub checkAns
 	}
 	while($ans ne 'y' && $ans ne 'n');
 	return $ans;
+}
+
+sub checkNum
+{
+	my ($num) = @_;
+	$sth = $dbh->prepare("SELECT facultynumber FROM students WHERE facultynumber = ?");
+	$sth->execute($num);
+	return $sth->rows;
 }
