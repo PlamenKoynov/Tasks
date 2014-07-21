@@ -60,14 +60,14 @@ for($i = 0; $i <= $countStrawberries - 1; $i++)
 		$rows = <STDIN>;
 		chomp($rows);
 	}
-	while ($rows < 0 || $rows > $x); 
+	while ($rows < 0 || $rows > $x || $rows =~ /\D/); 
 	do
 	{
 		print "Column: ";
 		$cols = <STDIN>;
 		chomp($cols);
 	}
-	while ($cols < 0 || $cols > $y);
+	while ($cols < 0 || $cols > $y || $cols =~ /\D/);
 	$strawberries[$x - $rows + 1][$cols] = 1;
 }
 

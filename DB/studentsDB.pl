@@ -67,7 +67,6 @@ do
 while($choice != 6);
 
 #krai
-$sth->finish;
 $dbh->disconnect();
 
 sub menu
@@ -93,8 +92,9 @@ sub menu
 
 sub showStudents
 {
+	my $q = qq(SELECT * FROM students);
 	my $flag = 0;
-	$sth = $dbh->prepare("SELECT * FROM students");
+	$sth = $dbh->prepare($q);
 	$sth->execute();
 	while(my $ref = $sth->fetchrow_hashref()) 
 	{
@@ -153,7 +153,8 @@ sub addStudents
 		$block = <STDIN>;
 		chomp($block);
 
-		$dbh->do("INSERT INTO students (firstname, secondname, thirdname, facultynumber, grade, block) VALUES (\'$first\', \'$second\', \'$third\', \'$num\', \'$mark\', \'$block\')");
+		my $q = qq(INSERT INTO students (firstname, secondname, thirdname, facultynumber, grade, block) VALUES (?, ?, ?, ?, ?, ?));
+		$dbh->do($q, undef, $first, $second, $third, $num, $mark, $block);
 
 		if(checkAns() eq 'n')
 		{
@@ -183,7 +184,8 @@ sub removeStudents
 	print "What is the $removeCriteria of the student you want to remove? ";
 	$remove = <STDIN>;
 	chomp($remove);
-	$deleted = $dbh->do("DELETE FROM students WHERE $removeCriteria = '$remove'");
+	my $q = qq(DELETE FROM students WHERE $removeCriteria = '$remove');
+	$deleted = $dbh->do($q);
 	print "There are $deleted deleted students!\n";
 	print "\n\n";
 }
@@ -212,13 +214,15 @@ sub updateInfo
 	print "What is the new $updateCriteria of the student you want to update? ";
 	$update = <STDIN>;
 	chomp($update);
-	$updated = $dbh->do("UPDATE students SET $updateCriteria = '$update' WHERE $updateCriteria = '$prev'");
+	my $q = qq(UPDATE students SET $updateCriteria = ? WHERE $updateCriteria = ?);
+	$updated = $dbh->do($q, undef, $update, $prev);
 	print "There are $updated updated students!\n";
 	print "\n\n";
 }
 
 sub readFromFile
 {
+	my $q = qq(INSERT INTO students (firstname, secondname, thirdname, facultynumber, grade, block) VALUES (?, ?, ?, ?, ?, ?));
 	my @info;
 	my $notSaved = 0;
 	my $filename;
@@ -236,7 +240,7 @@ sub readFromFile
 		}
 		else
 		{
-			$dbh->do("INSERT INTO students (firstname, secondname, thirdname, facultynumber, grade, block) VALUES (?, ?, ?, ?, ?, ?)" , undef, $info[0], $info[1], $info[2], $info[3], $info[4], $info[5]);
+			$dbh->do($q , undef, $info[0], $info[1], $info[2], $info[3], $info[4], $info[5]);
 		}
 	}
 	close FILE;
@@ -267,8 +271,9 @@ sub checkAns
 
 sub checkNum
 {
+	my $q = qq(SELECT facultynumber FROM students WHERE facultynumber = ?);
 	my ($num) = @_;
-	$sth = $dbh->prepare("SELECT facultynumber FROM students WHERE facultynumber = ?");
+	$sth = $dbh->prepare($q);
 	$sth->execute($num);
 	return $sth->rows;
 }
